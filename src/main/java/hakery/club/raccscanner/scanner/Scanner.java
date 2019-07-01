@@ -4,20 +4,19 @@ import hakery.club.raccscanner.RScanner;
 
 public abstract class Scanner<T> {
 
-    private T result;
     protected RScanner rScanner;
+    private T result;
 
-    public Scanner() {}
+    public Scanner() {
+    }
 
     public abstract boolean scan();
 
-    public T getResult()
-    {
+    public T getResult() {
         return this.result;
     }
 
-    protected void setResult(T result)
-    {
+    protected void setResult(T result) {
         this.result = result;
     }
 

@@ -15,16 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class OpcodeUtils {
 
-    public static OpcodeUtils getInstance() {
-        return instance;
-    }
-
+    private static final OpcodeUtils instance = new OpcodeUtils();
     private final HashMap<Integer, String> opcodeNames = new HashMap<>();
 
-    private static final OpcodeUtils instance = new OpcodeUtils();
-
-    private OpcodeUtils()
-    {
+    private OpcodeUtils() {
         try {
             Field[] fields = Opcodes.class.getDeclaredFields();
 
@@ -37,57 +31,62 @@ public class OpcodeUtils {
                         opcodeNames.put(field.getInt(null), field.getName());
                 }
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static OpcodeUtils getInstance() {
+        return instance;
     }
 
     public void dumpOpcodes(InstructionList src, String path, String method) {
         try {
             File dump = new File(String.format("dump%d", new Random().nextInt(9999)));
 
-            if(!dump.exists())
+            if (!dump.exists())
                 dump.createNewFile();
 
             AtomicInteger i = new AtomicInteger();
             src.getOpcodes().forEach(op -> {
                 try {
-                    String toWrite = String.format("%d %s\n",i.getAndIncrement(), opcodeNames.get(op));
+                    String toWrite = String.format("%d %s\n", i.getAndIncrement(), opcodeNames.get(op));
                     Files.write(dump.toPath(), toWrite.getBytes(), StandardOpenOption.APPEND);
-                } catch (Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
 
             System.out.println(String.format("[Raccoon] Dumped %s#%s to %s", path, method, dump.getName()));
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean compareOpcodes(InstructionList from, InstructionList source, int sourceOffset) {
-        if(source.size() == 0)
+        if (source.size() == 0)
             return false;
 
         int scanLenght = Math.min(from.size(), from.size()); /* get lowest amount to compare */
 
-        for (int idx = 0; idx < scanLenght; idx++)
-        {
-            if(from.isReplaceable(idx)) /* this means an byte can be replaced by anything else*/
+        for (int idx = 0; idx < scanLenght; idx++) {
+            if (from.isReplaceable(idx)) /* this means an byte can be replaced by anything else*/
                 continue;
 
-               int fromOP = from.get(idx);
-               int sourceOP = source.get(idx + sourceOffset);
+            int fromOP = from.get(idx);
+            int sourceOP = source.get(idx + sourceOffset);
 
-               if(sourceOP != fromOP)
-                   return false;
+            if (sourceOP != fromOP)
+                return false;
         }
 
         return true;
     }
 
-    public int getConstantCount(InstructionList source)
-    {
+    public int getConstantCount(InstructionList source) {
         int res = 0;
-        for(int i =0; i< source.size(); i++)
-            if(source.get(i) >= Opcodes.ICONST_0 && source.get(i) <= Opcodes.ICONST_5)
+        for (int i = 0; i < source.size(); i++)
+            if (source.get(i) >= Opcodes.ICONST_0 && source.get(i) <= Opcodes.ICONST_5)
                 res++;
         return res;
     }
@@ -100,23 +99,20 @@ public class OpcodeUtils {
         return res;
     }
 
-    public boolean findOpcodes(InstructionList toFind, InstructionList source)
-    {
-        if(toFind.size() > source.size())
+    public boolean findOpcodes(InstructionList toFind, InstructionList source) {
+        if (toFind.size() > source.size())
             return false;
 
         /* loop over every instruction in the source */
-        for(int i = 0; i < source.size(); i++)
-        {
-            if(compareOpcodes(toFind, source, i))
+        for (int i = 0; i < source.size(); i++) {
+            if (compareOpcodes(toFind, source, i))
                 return true;
         }
 
         return false;
     }
 
-    public byte[] toByteArray(InputStream is)
-    {
+    public byte[] toByteArray(InputStream is) {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int nRead;
@@ -127,14 +123,12 @@ public class OpcodeUtils {
             }
 
             return buffer.toByteArray();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
     }
-
 
 
 }

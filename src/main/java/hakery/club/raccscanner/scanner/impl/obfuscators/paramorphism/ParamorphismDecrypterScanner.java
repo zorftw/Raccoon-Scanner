@@ -38,19 +38,18 @@ public class ParamorphismDecrypterScanner extends Scanner<ArrayList<ClassNode>> 
 
             node.methods.forEach(methodNode -> {
                 /* static initializer */
-                if(methodNode.name.equals("<clinit>"))
-                {
+                if (methodNode.name.equals("<clinit>")) {
                     InstructionList instructionList = new InstructionList(methodNode.instructions);
 
-                    if(OpcodeUtils.getInstance().compareOpcodes(initializerInstructions, instructionList, 0))
+                    if (OpcodeUtils.getInstance().compareOpcodes(initializerInstructions, instructionList, 0))
                         flags.addAndGet(2);
                 }
             });
 
-            if(rScanner.isDebugging() && flags.get() != 0)
+            if (rScanner.isDebugging() && flags.get() != 0)
                 System.out.printf("[ParamorphismDecrypterScanner] %s.class with certainty level: %d (%s)\n", name, flags.get(), flags.get() == 1 ? "Undecisive" : "Confident");
 
-            if(flags.get() >= 2)
+            if (flags.get() >= 2)
                 tmp.add(node);
         });
 

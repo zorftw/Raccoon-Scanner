@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Now we get more advanced, this scanner will search for any ClassLoader from the Paramorphism obfuscator
  */
-public class  ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode>> {
+public class ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode>> {
 
     private final InstructionList classLoaderInstructions = new InstructionList(Arrays.asList(
             Opcodes.ALOAD, /* aload */
@@ -42,31 +42,30 @@ public class  ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode
             AtomicInteger flags = new AtomicInteger();
 
             /* Class must be a classloader */
-            if(node.superName.equals("java/lang/ClassLoader"))
-            {
-                node.fields.forEach(fieldNode ->  {
+            if (node.superName.equals("java/lang/ClassLoader")) {
+                node.fields.forEach(fieldNode -> {
                     /* every classloader contained a byte array (this is generally found in custom classloaders anyway) */
-                    if(fieldNode.desc.equals("[B") && node.fields.size() == 1)
+                    if (fieldNode.desc.equals("[B") && node.fields.size() == 1)
                         flags.addAndGet(1);
                 });
 
                 node.methods.forEach(methodNode -> {
                     /* function createClass */
-                    if(methodNode.name.equals("createClass") && methodNode.signature.equals("(Ljava/lang/String;)Ljava/lang/Class<*>;"))
+                    if (methodNode.name.equals("createClass") && methodNode.signature.equals("(Ljava/lang/String;)Ljava/lang/Class<*>;"))
                         flags.addAndGet(1);
                     else {
                         InstructionList instructionList = new InstructionList(methodNode.instructions);
 
-                        if(OpcodeUtils.getInstance().compareOpcodes(classLoaderInstructions, instructionList, 0))
+                        if (OpcodeUtils.getInstance().compareOpcodes(classLoaderInstructions, instructionList, 0))
                             flags.addAndGet(1);
                     }
                 });
 
-              if(rScanner.isDebugging() && flags.get() != 0)
+                if (rScanner.isDebugging() && flags.get() != 0)
                     System.out.printf("[ParamorphismClassLoaderScanner] %s.class with certainty level: %d (%s)\n", name, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
 
-                  if(flags.get() >= 2)
-                      res.add(node);
+                if (flags.get() >= 2)
+                    res.add(node);
             }
         });
 

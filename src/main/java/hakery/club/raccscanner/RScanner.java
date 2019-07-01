@@ -10,6 +10,10 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +22,11 @@ import java.util.zip.ZipFile;
 
 public class RScanner {
 
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     private File targetFile;
     private Map<String, ClassNode> classes;
     private boolean debugging = true;
-
     private Scanners scanners;
-
     private boolean debugInfoFound = false;
 
     public RScanner(File target) throws IOException {
@@ -34,15 +37,16 @@ public class RScanner {
 
         this.scanners = new Scanners(this);
         this.scanners.scan();
+
     }
 
     /**
      * Use this if you've already filtered the jar file /  already have a classpath you want to scan
      * this will prevent limitations that might exist
+     *
      * @param classes
      */
-    public RScanner(Map<String, ClassNode> classes)
-    {
+    public RScanner(Map<String, ClassNode> classes) {
         this.classes = classes;
         this.targetFile = null;
 
@@ -106,15 +110,41 @@ public class RScanner {
         return this.classes;
     }
 
+    public String getDateCreated() {
+        if (this.targetFile == null)
+            return "Classpath was directly loaded...";
+        try {
+            BasicFileAttributes basicFileAttributes = Files.readAttributes(this.targetFile.toPath(), BasicFileAttributes.class);
+            long creationTime = basicFileAttributes.creationTime().toMillis();
+
+            Date date = new Date(creationTime);
+            return dateFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Null";
+    }
+
+    public String getLastModified() {
+        if (this.targetFile == null)
+            return "Classpath was directly loaded...";
+        try {
+            BasicFileAttributes basicFileAttributes = Files.readAttributes(this.targetFile.toPath(), BasicFileAttributes.class);
+            long creationTime = basicFileAttributes.lastModifiedTime().toMillis();
+
+            Date date = new Date(creationTime);
+            return dateFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Null";
+    }
+
     public File getTargetFile() {
         return targetFile;
     }
 
     public Scanners getScanner() {
         return scanners;
-    }
-
-    public static void main(String[] args) throws IOException {
-        RScanner scanner = new RScanner(new File("D:\\Allatori-Cracked\\Hello-World-obf.jar"));
     }
 }

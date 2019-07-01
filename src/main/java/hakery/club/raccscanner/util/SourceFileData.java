@@ -7,8 +7,7 @@ public class SourceFileData {
     private final String name;
     private final ClassNode node;
 
-    public SourceFileData(ClassNode classNode, String name)
-    {
+    public SourceFileData(ClassNode classNode, String name) {
         this.name = name;
         this.node = classNode;
     }

@@ -11,11 +11,11 @@ import java.util.Arrays;
 
 /**
  * V4
- *
+ * <p>
  * Put's a bunch of random integers and longs (key values) on the stack,
  * uses some xor trickery, so this is easily found by looking at Xor operations and
  * amount of values pushed onto the stack.
- *
+ * <p>
  * V3
  * Always starts with a new exception, getting stacktrace, initializing a new buffer
  * and getting the StackTraceElement name.
@@ -57,9 +57,8 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             int constCount = OpcodeUtils.getInstance().getConstantCount(instructionList);
             int ixorCount = OpcodeUtils.getInstance().getOpcodeCount(Opcodes.IXOR, instructionList);
 
-            if(siPushCount >= 8 && constCount >= 8 && ixorCount >= 3)
-            {
-                if(rScanner.isDebugging())
+            if (siPushCount >= 8 && constCount >= 8 && ixorCount >= 3) {
+                if (rScanner.isDebugging())
                     System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v4", classPath));
 
                 tmp.add(classNode);
@@ -73,13 +72,12 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
              * V3 Check *
              * */
 
-             if(OpcodeUtils.getInstance().findOpcodes(allatoriStringEncryptionV_3, instructionList))
-             {
-                 if(rScanner.isDebugging())
-                     System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v3", classPath));
+            if (OpcodeUtils.getInstance().findOpcodes(allatoriStringEncryptionV_3, instructionList)) {
+                if (rScanner.isDebugging())
+                    System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v3", classPath));
 
-                 tmp.add(classNode);
-             }
+                tmp.add(classNode);
+            }
 
             /**
              * End of V3 Check
