@@ -57,7 +57,7 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             int constCount = OpcodeUtils.getInstance().getConstantCount(instructionList);
             int ixorCount = OpcodeUtils.getInstance().getOpcodeCount(Opcodes.IXOR, instructionList);
 
-            if (siPushCount >= 8 && constCount >= 8 && ixorCount >= 3) {
+            if (siPushCount >= 8 && constCount >= 8 && ixorCount >= 3 && instructionList.size() <= 250) {
                 if (rScanner.isDebugging())
                     System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v4", classPath));
 

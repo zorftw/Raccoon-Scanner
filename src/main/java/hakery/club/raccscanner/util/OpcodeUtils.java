@@ -2,6 +2,7 @@ package hakery.club.raccscanner.util;
 
 import hakery.club.raccscanner.util.opcodes.InstructionList;
 import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.util.Printer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,24 +17,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OpcodeUtils {
 
     private static final OpcodeUtils instance = new OpcodeUtils();
-    private final HashMap<Integer, String> opcodeNames = new HashMap<>();
-
     private OpcodeUtils() {
-        try {
-            Field[] fields = Opcodes.class.getDeclaredFields();
+        /** NOTE TO SELF:
+         *      Read the docs dipshit
+         *
+         try {
+         Field[] fields = Opcodes.class.getDeclaredFields();
 
-            for (Field field : fields) {
-                /**
-                 * Is an integer
-                 */
-                if (field.getType().toString().equals(int.class.getTypeName())) {
-                    if (!opcodeNames.containsKey(field.getInt(null)))
-                        opcodeNames.put(field.getInt(null), field.getName());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+         for (Field field : fields) {
+         //is an int
+         if (field.getType().toString().equals(int.class.getTypeName())) {
+         if (!opcodeNames.containsKey(field.getInt(null)))
+         opcodeNames.put(field.getInt(null), field.getName());
+         }
+         }
+         } catch (Exception e) {
+         e.printStackTrace();
+         }
+         */
     }
 
     public static OpcodeUtils getInstance() {
@@ -41,8 +42,11 @@ public class OpcodeUtils {
     }
 
     public void dumpOpcodes(InstructionList src, String path, String method) {
+        int idx = 0;
+
         try {
-            File dump = new File(String.format("dump%d", new Random().nextInt(9999)));
+            File dump = new File(String.format("dump%d", idx));
+            idx++;
 
             if (!dump.exists())
                 dump.createNewFile();
@@ -50,7 +54,7 @@ public class OpcodeUtils {
             AtomicInteger i = new AtomicInteger();
             src.getOpcodes().forEach(op -> {
                 try {
-                    String toWrite = String.format("%d %s\n", i.getAndIncrement(), opcodeNames.get(op));
+                    String toWrite = String.format("%d %s\n", i.getAndIncrement(), Printer.OPCODES[op]);
                     Files.write(dump.toPath(), toWrite.getBytes(), StandardOpenOption.APPEND);
                 } catch (Exception e) {
                     e.printStackTrace();

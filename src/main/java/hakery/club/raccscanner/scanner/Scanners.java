@@ -7,6 +7,8 @@ import hakery.club.raccscanner.scanner.impl.jar.JarSizeScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.allatori.AllatoriStringEncryptionScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismClassloaderScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismDecrypterScanner;
+import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerHideAccessScanner;
+import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerStringEncryptionScanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,15 +37,18 @@ public class Scanners {
                 /* obfuscators */
                 AllatoriStringEncryptionScanner.class,
                 ParamorphismDecrypterScanner.class,
-                ParamorphismClassloaderScanner.class
+                ParamorphismClassloaderScanner.class,
+                StringerStringEncryptionScanner.class,
+                StringerHideAccessScanner.class
         ));
     }
 
     public void scan() {
-        this.scannerArrayList.forEach(scanner -> {
+        this.scannerArrayList.forEach(scanner -> new Thread(() -> {
+            /* Might save performance using different threads */
             if (!scanner.scan())
                 System.out.println(String.format("[Raccoon] scanner %s ended in failure", scanner.getClass().getName()));
-        });
+        }).start());
     }
 
     private void add(List<Class<? extends Scanner<?>>> scanner) {

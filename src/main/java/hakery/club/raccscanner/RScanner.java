@@ -36,8 +36,10 @@ public class RScanner {
         assert this.classes.size() > 0;
 
         this.scanners = new Scanners(this);
-        this.scanners.scan();
 
+        /** if we're debugging, we will scan right away */
+        if (this.isDebugging())
+            this.scanners.scan();
     }
 
     /**
@@ -53,7 +55,11 @@ public class RScanner {
         assert this.classes.size() > 0;
 
         this.scanners = new Scanners(this);
-        this.scanners.scan();
+
+        /** if we're debugging, we will scan right away */
+        if (this.isDebugging())
+            this.scanners.scan();
+
     }
 
     public Map<String, ClassNode> readClasses() throws IOException {
