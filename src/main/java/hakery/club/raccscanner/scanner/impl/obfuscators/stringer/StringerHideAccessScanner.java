@@ -66,7 +66,7 @@ public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
     public boolean scan() {
         ArrayList<ClassNode> res = new ArrayList<>();
 
-        rScanner.getClasses().forEach((classPath, classNode) -> {
+        raccoon.getClasses().forEach((classPath, classNode) -> {
 
             AtomicInteger flags = new AtomicInteger();
 
@@ -78,22 +78,22 @@ public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
                             || fd.desc.equals("[I")
                             || fd.desc.equals("[S")
                             || fd.desc.equals("I")))
-                        flags.incrementAndGet();
+                        this.incrementFlagsReached();
 
                 classNode.methods.forEach(methodNode -> {
                     InstructionList instructionList = new InstructionList(methodNode.instructions);
 
                     if (OpcodeUtils.getInstance().compareOpcodes(stringerHideAccessFieldGetter3_0, instructionList, 0))
-                        flags.incrementAndGet();
+                        this.incrementFlagsReached();
 
                     if (OpcodeUtils.getInstance().compareOpcodes(stringerHideAccessMethodGetter3_0, instructionList, 0))
-                        flags.incrementAndGet();
+                        this.incrementFlagsReached();
                 });
 
-                if (rScanner.isDebugging() && flags.get() != 0)
-                    System.out.printf("[StringerHideAccessScanner] %s.class with certainty level: %d (%s)\n", classPath, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
+                if (raccoon.isDebugging() && getFlagsReached() != 0)
+                    log("%s.class with certainty level: %d (%s)", classPath, getFlagsReached(), getFlagsReached() == 1 ? "Unsure" : getFlagsReached() == 2 ? "Undecisive" : "Confident");
 
-                if (flags.get() >= 2)
+                if (getFlagsReached() >= 2)
                     res.add(classNode);
             }
         });
@@ -101,4 +101,5 @@ public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
         setResult(res);
         return true;
     }
+
 }

@@ -37,7 +37,7 @@ public class ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode>
         ArrayList<ClassNode> res = new ArrayList<>();
 
         /* do this for every class */
-        rScanner.getClasses().forEach((name, node) -> {
+        raccoon.getClasses().forEach((name, node) -> {
 
             AtomicInteger flags = new AtomicInteger();
 
@@ -61,8 +61,8 @@ public class ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode>
                     }
                 });
 
-                if (rScanner.isDebugging() && flags.get() != 0)
-                    System.out.printf("[ParamorphismClassLoaderScanner] %s.class with certainty level: %d (%s)\n", name, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
+                if (raccoon.isDebugging() && flags.get() != 0)
+                    log("%s.class with certainty level: %d (%s)", name, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
 
                 if (flags.get() >= 2)
                     res.add(node);

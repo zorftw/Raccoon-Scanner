@@ -8,7 +8,6 @@ import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParamorphismDecrypterScanner extends Scanner<ArrayList<ClassNode>> {
 
@@ -32,9 +31,7 @@ public class ParamorphismDecrypterScanner extends Scanner<ArrayList<ClassNode>> 
         ArrayList<ClassNode> tmp = new ArrayList<>();
 
         /* do this for every class */
-        rScanner.getClasses().forEach((name, node) -> {
-
-            AtomicInteger flags = new AtomicInteger();
+        raccoon.getClasses().forEach((name, node) -> {
 
             node.methods.forEach(methodNode -> {
                 /* static initializer */
@@ -42,14 +39,14 @@ public class ParamorphismDecrypterScanner extends Scanner<ArrayList<ClassNode>> 
                     InstructionList instructionList = new InstructionList(methodNode.instructions);
 
                     if (OpcodeUtils.getInstance().compareOpcodes(initializerInstructions, instructionList, 0))
-                        flags.addAndGet(2);
+                        incrementFlagsReached(2);
                 }
             });
 
-            if (rScanner.isDebugging() && flags.get() != 0)
-                System.out.printf("[ParamorphismDecrypterScanner] %s.class with certainty level: %d (%s)\n", name, flags.get(), flags.get() == 1 ? "Undecisive" : "Confident");
+            if (raccoon.isDebugging() && getFlagsReached() != 0)
+                log("%s.class with certainty level: %d (%s)", name, getFlagsReached(), getFlagsReached() == 1 ? "Undecisive" : "Confident");
 
-            if (flags.get() >= 2)
+            if (getFlagsReached() >= 2)
                 tmp.add(node);
         });
 

@@ -45,7 +45,7 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
     public boolean scan() {
         ArrayList<ClassNode> tmp = new ArrayList<>();
 
-        rScanner.getClasses().forEach((classPath, classNode) -> classNode.methods.forEach(methodNode -> {
+        raccoon.getClasses().forEach((classPath, classNode) -> classNode.methods.forEach(methodNode -> {
             InstructionList instructionList = new InstructionList(methodNode.instructions);
 
             /**
@@ -58,8 +58,8 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             int ixorCount = OpcodeUtils.getInstance().getOpcodeCount(Opcodes.IXOR, instructionList);
 
             if (siPushCount >= 8 && constCount >= 8 && ixorCount >= 3 && instructionList.size() <= 250) {
-                if (rScanner.isDebugging())
-                    System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v4", classPath));
+                if (raccoon.isDebugging())
+                    log("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v4", classPath);
 
                 tmp.add(classNode);
             }
@@ -73,8 +73,8 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
              * */
 
             if (OpcodeUtils.getInstance().findOpcodes(allatoriStringEncryptionV_3, instructionList)) {
-                if (rScanner.isDebugging())
-                    System.out.println(String.format("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v3", classPath));
+                if (raccoon.isDebugging())
+                    log("%s.class might contain encrypted strings using v3", classPath);
 
                 tmp.add(classNode);
             }

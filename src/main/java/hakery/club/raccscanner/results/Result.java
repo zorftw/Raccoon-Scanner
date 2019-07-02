@@ -1,6 +1,6 @@
 package hakery.club.raccscanner.results;
 
-import hakery.club.raccscanner.RScanner;
+import hakery.club.raccscanner.Raccoon;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismClassloaderScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismDecrypterScanner;
 
@@ -11,9 +11,9 @@ public class Result {
 
     Map<String, Integer> obfuscatorPercentage = new HashMap<>();
 
-    public Result(RScanner rScanner) {
+    public Result(Raccoon raccoon) {
 
-        rScanner.getScanner().getScanners().forEach(scanner -> {
+        raccoon.getScanner().getScanners().forEach(scanner -> {
             if (scanner instanceof ParamorphismClassloaderScanner) {
                 ParamorphismClassloaderScanner paramorphismClassloaderScanner = (ParamorphismClassloaderScanner) scanner;
                 if (paramorphismClassloaderScanner.getResult().size() > 2)

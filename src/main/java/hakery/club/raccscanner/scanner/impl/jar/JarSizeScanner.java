@@ -6,10 +6,10 @@ public class JarSizeScanner extends Scanner<Long> {
 
     @Override
     public boolean scan() {
-        this.setResult(rScanner.getTargetFile().length());
+        this.setResult(raccoon.getTargetFile().length());
 
-        if (rScanner.isDebugging())
-            System.out.printf("[Raccoon] Jar is %o bytes\n", this.getResult());
+        if (raccoon.isDebugging())
+            log("Jar is %o bytes", this.getResult());
 
         return true;
     }

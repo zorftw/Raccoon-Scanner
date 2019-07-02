@@ -7,10 +7,10 @@ public class ClassCountScanner extends Scanner<Integer> {
     @Override
     public boolean scan() {
         //TODO: Filter out invalid classes
-        this.setResult(rScanner.getClasses().size());
+        this.setResult(raccoon.getClasses().size());
 
-        if (rScanner.isDebugging())
-            System.out.printf("[Raccoon] Found %d classes\n", this.getResult());
+        if (raccoon.isDebugging())
+            log("Found %d classes", this.getResult());
 
         return true;
     }

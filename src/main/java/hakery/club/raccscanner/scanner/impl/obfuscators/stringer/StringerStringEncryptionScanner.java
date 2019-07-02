@@ -5,7 +5,6 @@ import hakery.club.raccscanner.util.OpcodeUtils;
 import hakery.club.raccscanner.util.opcodes.InstructionList;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.util.Printer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
 
         ArrayList<ClassNode> res = new ArrayList<>();
 
-        rScanner.getClasses().forEach((classPath, classNode) -> {
+        raccoon.getClasses().forEach((classPath, classNode) -> {
 
             /* Class must be a Thread */
             if (classNode.superName.contains("java/lang/Thread")) {
@@ -72,8 +71,8 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
                     }
                 });
 
-                if (rScanner.isDebugging() && flags.get() != 0)
-                    System.out.printf("[StringerStringEncryptionScanner] %s.class with certainty level: %d (%s)\n", classPath, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
+                if (raccoon.isDebugging() && flags.get() != 0)
+                    log("%s.class with certainty level: %d (%s)", classPath, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
 
                 if (flags.get() >= 2)
                     res.add(classNode);

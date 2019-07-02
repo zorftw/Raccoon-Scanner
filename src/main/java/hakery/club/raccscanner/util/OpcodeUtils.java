@@ -4,38 +4,14 @@ import hakery.club.raccscanner.util.opcodes.InstructionList;
 import jdk.internal.org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.Printer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class OpcodeUtils {
 
-    private static final OpcodeUtils instance = new OpcodeUtils();
-    private OpcodeUtils() {
-        /** NOTE TO SELF:
-         *      Read the docs dipshit
-         *
-         try {
-         Field[] fields = Opcodes.class.getDeclaredFields();
-
-         for (Field field : fields) {
-         //is an int
-         if (field.getType().toString().equals(int.class.getTypeName())) {
-         if (!opcodeNames.containsKey(field.getInt(null)))
-         opcodeNames.put(field.getInt(null), field.getName());
-         }
-         }
-         } catch (Exception e) {
-         e.printStackTrace();
-         }
-         */
-    }
+    public static final OpcodeUtils instance = new OpcodeUtils();
 
     public static OpcodeUtils getInstance() {
         return instance;
@@ -115,24 +91,5 @@ public class OpcodeUtils {
 
         return false;
     }
-
-    public byte[] toByteArray(InputStream is) {
-        try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-
-            byte[] data = new byte[1024 * 4 * 4];
-            while ((nRead = is.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-
-            return buffer.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
 
 }

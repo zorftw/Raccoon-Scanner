@@ -1,11 +1,13 @@
 package hakery.club.raccscanner.scanner;
 
-import hakery.club.raccscanner.RScanner;
+import hakery.club.raccscanner.Raccoon;
 
 public abstract class Scanner<T> {
 
-    protected RScanner rScanner;
+    protected Raccoon raccoon;
     private T result;
+
+    private int flagsReached;
 
     public Scanner() {
     }
@@ -18,6 +20,26 @@ public abstract class Scanner<T> {
 
     protected void setResult(T result) {
         this.result = result;
+    }
+
+    public int getFlagsReached() {
+        return flagsReached;
+    }
+
+    public void incrementFlagsReached() {
+        this.flagsReached++;
+    }
+
+    public void incrementFlagsReached(int inc) {
+        this.flagsReached += inc;
+    }
+
+    public String getResultAsString() {
+        return null;
+    }
+
+    public void log(String format, Object... formatting) {
+        this.raccoon.getLogger().log("[" + this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1) + "] " + format, formatting);
     }
 
 }

@@ -1,7 +1,8 @@
 package hakery.club.raccscanner;
 
+import hakery.club.raccscanner.logger.RaccoonLogger;
 import hakery.club.raccscanner.scanner.Scanners;
-import hakery.club.raccscanner.util.OpcodeUtils;
+import hakery.club.raccscanner.util.DataUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.JSRInlinerAdapter;
@@ -10,6 +11,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class RScanner {
+public class Raccoon {
 
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     private File targetFile;
@@ -29,17 +31,15 @@ public class RScanner {
     private Scanners scanners;
     private boolean debugInfoFound = false;
 
-    public RScanner(File target) throws IOException {
+    private RaccoonLogger logger = new RaccoonLogger();
+
+    private byte[] jarManifest = null;
+
+    public Raccoon(File target) throws IOException {
         this.targetFile = target;
         this.classes = readClasses();
 
         assert this.classes.size() > 0;
-
-        this.scanners = new Scanners(this);
-
-        /** if we're debugging, we will scan right away */
-        if (this.isDebugging())
-            this.scanners.scan();
     }
 
     /**
@@ -48,18 +48,26 @@ public class RScanner {
      *
      * @param classes
      */
-    public RScanner(Map<String, ClassNode> classes) {
+    public Raccoon(Map<String, ClassNode> classes) {
         this.classes = classes;
         this.targetFile = null;
 
         assert this.classes.size() > 0;
+    }
 
+    public void initialize(OutputStream target) {
         this.scanners = new Scanners(this);
+        this.setOutputStream(target == null ? System.out : target);
 
         /** if we're debugging, we will scan right away */
         if (this.isDebugging())
             this.scanners.scan();
+    }
 
+    public void scan() {
+        /** If we're debugging, we would've already scanned */
+        if (!this.isDebugging())
+            this.scanners.scan();
     }
 
     public Map<String, ClassNode> readClasses() throws IOException {
@@ -75,7 +83,7 @@ public class RScanner {
             try {
                 /** Credits to ItzSomebody **/
                 if (entry.getName().endsWith(".class")) {
-                    byte[] classBytes = OpcodeUtils.getInstance().toByteArray(zip.getInputStream(entry));
+                    byte[] classBytes = DataUtils.INSTANCE.toByteArray(zip.getInputStream(entry));
 
                     ClassReader classReader = new ClassReader(classBytes);
                     ClassNode classNode = new ClassNode();
@@ -91,9 +99,11 @@ public class RScanner {
 
                     tmp.put(classNode.name, classNode);
 
+                } else if (entry.getName().equals("META-INF/MANIFEST.MF")) {
+                    this.jarManifest = DataUtils.INSTANCE.toByteArray(zip.getInputStream(entry));
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println(String.format("[Raccoon] Couldn't parse %s", entry.getName()));
+                this.logger.log("Couldn't parse %s", entry.getName());
             }
         }
         zip.close();
@@ -146,11 +156,23 @@ public class RScanner {
         return "Null";
     }
 
+    public RaccoonLogger getLogger() {
+        return logger;
+    }
+
+    public void setOutputStream(OutputStream outputStream) {
+        this.logger.setTargetOutputStream(outputStream);
+    }
+
     public File getTargetFile() {
         return targetFile;
     }
 
     public Scanners getScanner() {
         return scanners;
+    }
+
+    public byte[] getJarManifest() {
+        return jarManifest;
     }
 }

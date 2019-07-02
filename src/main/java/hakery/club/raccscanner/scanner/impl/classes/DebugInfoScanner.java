@@ -14,17 +14,17 @@ public class DebugInfoScanner extends Scanner<ArrayList<SourceFileData>> {
     @Override
     public boolean scan() {
         ArrayList<SourceFileData> tmp = new ArrayList<>();
-        rScanner.getClasses().forEach((name, node) -> {
+        raccoon.getClasses().forEach((name, node) -> {
             if (node.sourceFile != null
                     && node.sourceFile.length() > 0
                     && node.sourceFile.endsWith(".java")
-                    && !name.contains(node.sourceFile.substring(0, node.sourceFile.length() - 5))) {
-                rScanner.setDebugInfoFound(true);
+                    && !name.contains(node.sourceFile.replace(".java", ""))) {
+                raccoon.setDebugInfoFound(true);
 
                 tmp.add(new SourceFileData(node, node.sourceFile));
 
-                if (rScanner.isDebugging()) {
-                    System.out.println(String.format("[Raccoon] Found debug info %s -> %s", name, node.sourceFile));
+                if (raccoon.isDebugging()) {
+                    log("Found debug info %s -> %s", name, node.sourceFile);
                 }
             }
         });
