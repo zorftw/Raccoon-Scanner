@@ -68,7 +68,7 @@ public class StringerIntegrityControlScanner extends Scanner<ArrayList<ClassNode
                         Math.min(getFlagsReached(), 3),
                         getFlagsReached() == 1 ?
                                 "Plausible" :
-                                getFlagsReached() > 1 && getFlagsReached() < 3
+                                getFlagsReached() == 2
                                         ? "Undecisive" :
                                         "Confident");
         });
