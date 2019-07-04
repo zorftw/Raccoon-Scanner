@@ -10,11 +10,12 @@ import hakery.club.raccscanner.util.DataUtils;
 public class ParamorphismManifestScanner extends Scanner<Boolean> {
     @Override
     public boolean scan() {
-
+        setResult(false);
         if (raccoon.getJarManifest() != null) {
             byte[] paramorphismByteArray = "Paramorphism".getBytes();
             if (DataUtils.INSTANCE.findInByteArray(paramorphismByteArray, raccoon.getJarManifest())) {
                 log("Paramorphism was found in Manifest file.");
+                setResult(true);
             }
         }
 

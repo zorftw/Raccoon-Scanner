@@ -19,6 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
 
+    /**
+     * Confirmed to work up to latest 9.1.15
+     */
     final InstructionList stringerHideAccessFieldGetter3_0 = new InstructionList(Arrays.asList(
             Opcodes.ILOAD,
             Opcodes.INVOKESTATIC,
@@ -38,6 +41,7 @@ public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
             Opcodes.ARETURN
     ));
 
+    /** Confirmed to work up to latest 9.1.15 */
     final InstructionList stringerHideAccessMethodGetter3_0 = new InstructionList(Arrays.asList(
             Opcodes.ILOAD,
             Opcodes.LDC,

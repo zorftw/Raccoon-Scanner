@@ -15,6 +15,10 @@ import java.util.Arrays;
  * Put's a bunch of random integers and longs (key values) on the stack,
  * uses some xor trickery, so this is easily found by looking at Xor operations and
  * amount of values pushed onto the stack.
+ *
+ * New as of v0.4 -> Some character lenght related stuff is repeated in v4 (creating new array etc..)
+ * due to the fact there isn't any stack scanning, the lenght of those arrays and characters isn't applied, and thus
+ * should work on everything. As of 4/7/19 this isn't confirmed yet.
  * <p>
  * V3
  * Always starts with a new exception, getting stacktrace, initializing a new buffer
@@ -41,6 +45,43 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             Opcodes.INVOKEVIRTUAL /* StackTraceElement#getClassName() */
     ));
 
+    private final InstructionList allatoriStringEncryptionV4_1 = new InstructionList(Arrays.asList(
+            Opcodes.ALOAD,
+            Opcodes.INVOKEVIRTUAL,
+            Opcodes.DUP,
+            Opcodes.NEWARRAY,
+            Opcodes.ICONST_1,
+            Opcodes.DUP,
+            Opcodes.POP2,
+            Opcodes.SWAP,
+            Opcodes.ICONST_1,
+            Opcodes.ISUB,
+            Opcodes.DUP_X2,
+            Opcodes.ISTORE,
+            Opcodes.ASTORE,
+            Opcodes.ISTORE,
+            Opcodes.DUP_X2,
+            0xFF,
+            Opcodes.ISTORE
+    ));
+
+    private final InstructionList allatoriStringEncryptionV4_2 = new InstructionList(Arrays.asList(
+            Opcodes.INVOKEVIRTUAL,
+            Opcodes.IINC,
+            Opcodes.ILOAD,
+            Opcodes.IXOR,
+            Opcodes.I2C,
+            Opcodes.CASTORE,
+            Opcodes.ILOAD,
+            Opcodes.IFLT,
+            Opcodes.ALOAD,
+            Opcodes.ALOAD,
+            Opcodes.ILOAD,
+            Opcodes.IINC,
+            Opcodes.DUP_X1,
+            Opcodes.INVOKEVIRTUAL
+    ));
+
     @Override
     public boolean scan() {
         ArrayList<ClassNode> tmp = new ArrayList<>();
@@ -52,14 +93,10 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
              * V4 Check
              */
 
-            /* again, thanks to itzsomebody for the idea */
-            int siPushCount = OpcodeUtils.getInstance().getOpcodeCount(Opcodes.SIPUSH, instructionList);
-            int constCount = OpcodeUtils.getInstance().getConstantCount(instructionList);
-            int ixorCount = OpcodeUtils.getInstance().getOpcodeCount(Opcodes.IXOR, instructionList);
-
-            if (siPushCount >= 8 && constCount >= 8 && ixorCount >= 3 && instructionList.size() <= 250) {
+            if (OpcodeUtils.getInstance().findOpcodes(allatoriStringEncryptionV4_1, instructionList)
+                    && OpcodeUtils.getInstance().findOpcodes(allatoriStringEncryptionV4_2, instructionList)) {
                 if (raccoon.isDebugging())
-                    log("[AllatoriStringEncryptionScanner] %s.class might contain encrypted strings using v4", classPath);
+                    log("%s.class might contain encrypted strings using v4", classPath);
 
                 tmp.add(classNode);
             }

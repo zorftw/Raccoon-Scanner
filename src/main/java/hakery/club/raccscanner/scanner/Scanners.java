@@ -9,6 +9,8 @@ import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.Paramorphis
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismDecrypterScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismManifestScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerHideAccessScanner;
+import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerIntegrityControlScanner;
+import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerManifestScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.stringer.StringerStringEncryptionScanner;
 
 import java.util.ArrayList;
@@ -43,7 +45,9 @@ public class Scanners {
                 ParamorphismManifestScanner.class,
 
                 StringerStringEncryptionScanner.class,
-                StringerHideAccessScanner.class
+                StringerHideAccessScanner.class,
+                StringerIntegrityControlScanner.class,
+                StringerManifestScanner.class
         ));
     }
 

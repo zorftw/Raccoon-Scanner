@@ -43,6 +43,40 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             Opcodes.DUP
     ));
 
+    final InstructionList stringerDecrypterStringEncryptionV9_15 = new InstructionList(Arrays.asList(
+            Opcodes.GETSTATIC,
+            Opcodes.NEW,
+            Opcodes.DUP,
+            Opcodes.ALOAD,
+            Opcodes.CHECKCAST,
+            Opcodes.INVOKESPECIAL,
+            Opcodes.ASTORE,
+            Opcodes.ALOAD,
+            Opcodes.INVOKEVIRTUAL,
+            Opcodes.IFNULL,
+            Opcodes.GETSTATIC,
+            Opcodes.ALOAD,
+            Opcodes.INVOKEVIRTUAL,
+            Opcodes.CHECKCAST,
+            Opcodes.ARETURN,
+            0xFF,
+            Opcodes.ALOAD,
+            Opcodes.CHECKCAST,
+            Opcodes.CHECKCAST,
+            Opcodes.ALOAD,
+            Opcodes.CHECKCAST,
+            Opcodes.CHECKCAST,
+            Opcodes.ARRAYLENGTH,
+            0xFF,
+            Opcodes.ISUB,
+            Opcodes.CALOAD,
+            Opcodes.BIPUSH,
+            Opcodes.ISHL,
+            Opcodes.ILOAD,
+            Opcodes.IOR
+
+    ));
+
     @Override
     public boolean scan() {
 
@@ -50,10 +84,12 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
 
         raccoon.getClasses().forEach((classPath, classNode) -> {
 
+            AtomicInteger flags = new AtomicInteger();
+
             /* Class must be a Thread */
             if (classNode.superName.contains("java/lang/Thread")) {
-                AtomicInteger flags = new AtomicInteger();
 
+                /** V3 */
                 if (classNode.fields.size() == 3)
                     if (classNode.fields.stream().allMatch(fd -> fd.desc.equals("[Ljava/lang/Object;")
                             || fd.desc.equals("I")
@@ -72,12 +108,33 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
                 });
 
                 if (raccoon.isDebugging() && flags.get() != 0)
-                    log("%s.class with certainty level: %d (%s)", classPath, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
+                    log("%s.class for 3_0 with certainty level: %d (%s)", classPath, flags.get(), flags.get() == 1 ? "Unsure" : flags.get() == 2 ? "Undecisive" : "Confident");
 
                 if (flags.get() >= 2)
                     res.add(classNode);
-            }
+            } /** End of V3 **/
 
+            /** Save performance if V3 was already detected */
+            if (!(flags.get() > 1)) {
+                if (classNode.fields.size() == 2) {
+                    if (classNode.fields.stream().anyMatch(fieldNode -> fieldNode.desc.equals("[Ljava/lang/Object;"))) ;
+                    incrementFlagsReached();
+                }
+
+                classNode.methods.forEach(methodNode -> {
+                    InstructionList instructionList = new InstructionList(methodNode.instructions);
+
+                    if (OpcodeUtils.getInstance().findOpcodes(stringerDecrypterStringEncryptionV9_15, instructionList))
+                        incrementFlagsReached();
+
+                    if (instructionList.size() == 972)
+                        incrementFlagsReached();
+                });
+
+                if (raccoon.isDebugging() && getFlagsReached() != 0)
+                    log("%s.class for V9_15 with certainty level: %d (%s)", classPath, getFlagsReached(), getFlagsReached() == 1 ? "Unsure" : getFlagsReached() == 2 ? "Undecisive" : "Confident");
+
+            }
         });
 
         setResult(res);

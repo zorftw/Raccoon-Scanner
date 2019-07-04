@@ -14,7 +14,7 @@ public class Main {
          *  2. Initialize with an outputstream
          *  3. Scan!
          */
-        Raccoon scanner = new Raccoon(new File("D:\\Paramorphism\\Hello-World-obf.jar"));
+        Raccoon scanner = new Raccoon(new File("input.jar"));
         scanner.initialize(null); /* set output to System.out */
         scanner.scan();
     }

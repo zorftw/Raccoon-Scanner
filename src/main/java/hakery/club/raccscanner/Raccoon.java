@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -36,6 +37,12 @@ public class Raccoon {
     private byte[] jarManifest = null;
 
     public Raccoon(File target) throws IOException {
+
+        if (!target.exists()) {
+            getLogger().error("Uh oh! Input file doesn't exist! Throwing exception...");
+            throw new FileNotFoundException("[Raccoon] Couldn't locate the targeted file");
+        }
+
         this.targetFile = target;
         this.classes = readClasses();
 
