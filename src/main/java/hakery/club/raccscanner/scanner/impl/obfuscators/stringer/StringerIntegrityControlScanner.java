@@ -44,7 +44,7 @@ public class StringerIntegrityControlScanner extends Scanner<ArrayList<ClassNode
 
     @Override
     public boolean scan() {
-
+        ArrayList<ClassNode> tmp = new ArrayList<>();
         raccoon.getClasses().forEach((classPath, classNode) -> {
             classNode.methods.forEach(methodNode -> {
                 if (methodNode.desc.equals("(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;"))
@@ -62,7 +62,10 @@ public class StringerIntegrityControlScanner extends Scanner<ArrayList<ClassNode
 
             });
 
-            if (raccoon.isDebugging() && getFlagsReached() != 0)
+            if (getFlagsReached() > 2)
+                tmp.add(classNode);
+
+            if (raccoon.isDebugging() && getFlagsReached() != 0) {
                 log("%s.class with certainty level: %d (%s)",
                         classPath,
                         Math.min(getFlagsReached(), 3),
@@ -71,8 +74,10 @@ public class StringerIntegrityControlScanner extends Scanner<ArrayList<ClassNode
                                 getFlagsReached() == 2
                                         ? "Undecisive" :
                                         "Confident");
+                this.reset();
+            }
         });
-
+        setResult(tmp);
         return true;
     }
 }

@@ -99,6 +99,8 @@ public class StringerHideAccessScanner extends Scanner<ArrayList<ClassNode>> {
 
                 if (getFlagsReached() >= 2)
                     res.add(classNode);
+
+                this.reset();
             }
         });
 

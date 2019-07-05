@@ -48,6 +48,8 @@ public class ParamorphismDecrypterScanner extends Scanner<ArrayList<ClassNode>> 
 
             if (getFlagsReached() >= 2)
                 tmp.add(node);
+
+            this.reset();
         });
 
         this.setResult(tmp);

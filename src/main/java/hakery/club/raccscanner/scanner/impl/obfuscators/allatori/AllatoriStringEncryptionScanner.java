@@ -119,6 +119,8 @@ public class AllatoriStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             /**
              * End of V3 Check
              */
+
+            this.reset();
         }));
 
         this.setResult(tmp);

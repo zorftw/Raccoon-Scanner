@@ -34,6 +34,10 @@ public abstract class Scanner<T> {
         this.flagsReached += inc;
     }
 
+    public void reset() {
+        this.flagsReached = 0;
+    }
+
     public String getResultAsString() {
         return null;
     }

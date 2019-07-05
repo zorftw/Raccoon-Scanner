@@ -1,6 +1,7 @@
 package hakery.club.raccscanner;
 
 import hakery.club.raccscanner.logger.RaccoonLogger;
+import hakery.club.raccscanner.results.Result;
 import hakery.club.raccscanner.scanner.Scanners;
 import hakery.club.raccscanner.util.DataUtils;
 import org.objectweb.asm.ClassReader;
@@ -31,6 +32,7 @@ public class Raccoon {
     private boolean debugging = true;
     private Scanners scanners;
     private boolean debugInfoFound = false;
+    private Result result;
 
     private RaccoonLogger logger = new RaccoonLogger();
 
@@ -67,8 +69,9 @@ public class Raccoon {
         this.setOutputStream(target == null ? System.out : target);
 
         /** if we're debugging, we will scan right away */
-        if (this.isDebugging())
+        if (this.isDebugging()) {
             this.scanners.scan();
+        }
     }
 
     public void scan() {
@@ -161,6 +164,13 @@ public class Raccoon {
             e.printStackTrace();
         }
         return "Null";
+    }
+
+    public Result getResult() {
+        if (this.result == null)
+            this.result = new Result(this);
+
+        return this.result;
     }
 
     public RaccoonLogger getLogger() {

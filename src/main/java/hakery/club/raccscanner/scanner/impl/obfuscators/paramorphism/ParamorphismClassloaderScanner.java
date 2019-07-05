@@ -66,6 +66,8 @@ public class ParamorphismClassloaderScanner extends Scanner<ArrayList<ClassNode>
 
                 if (flags.get() >= 2)
                     res.add(node);
+
+                this.reset();
             }
         });
 
