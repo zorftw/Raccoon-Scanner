@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/RealXor/Raccoon-Scanner.svg)](https://jitpack.io/#RealXor/Raccoon-Scanner)
+
 # Raccoon-Scanner
 An easy and lightweight (soon™) library of detecting Java packers / obfuscators with an easy drag and drop. No need to deobfuscate a class,
 determine the obfuscator and adjust your transformers accordingly. Do a simple drag and drop and begin the deobfuscation process!
