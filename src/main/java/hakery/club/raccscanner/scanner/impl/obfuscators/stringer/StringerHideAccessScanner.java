@@ -3,7 +3,7 @@ package hakery.club.raccscanner.scanner.impl.obfuscators.stringer;
 import hakery.club.raccscanner.scanner.Scanner;
 import hakery.club.raccscanner.util.OpcodeUtils;
 import hakery.club.raccscanner.util.opcodes.InstructionList;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.util.ArrayList;

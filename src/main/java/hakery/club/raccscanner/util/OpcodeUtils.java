@@ -1,7 +1,7 @@
 package hakery.club.raccscanner.util;
 
 import hakery.club.raccscanner.util.opcodes.InstructionList;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.Printer;
 
 import java.io.File;
