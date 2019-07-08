@@ -2,6 +2,8 @@ package an.innocent.program.main;
 
 import hakery.club.raccscanner.Raccoon;
 import hakery.club.raccscanner.results.util.Obfuscator;
+import hakery.club.raccscanner.results.util.result.impl.ParamorphismResult;
+import hakery.club.raccscanner.results.util.result.impl.StringerResult;
 
 import java.io.File;
 
@@ -14,22 +16,25 @@ public class Main {
          *  2. Initialize with an outputstream
          *  3. Scan!
          */
-        Raccoon scanner = new Raccoon(new File("D:\\RaccoonSamples\\Stringer\\stringintegritycontrol\\fizzbuzz_basic-2.jar"));
+        Raccoon scanner = new Raccoon(new File("input.jar"));
         scanner.initialize(null); /* set output to System.out */
         scanner.scan();
 
         /**
-         * Getting results is easy
+         * Percentages can be easily written for you
          */
         scanner.getResult().printResults(); /* print all results */
 
         /**
-         * Get result for certain obfuscator
-         *
-         * Right now only implementations, but later you'll be able to count flags,
-         * parse all results etc.
+         * Getting results is easy and simple
          */
-        int stringerPercentage = scanner.getResult().getResultByObfuscator(Obfuscator.STRINGER).getPercentage();
+        ParamorphismResult result = scanner.getResult().getObfuscatorResult(Obfuscator.PARAMORPHISM);
+        scanner.getLogger().log("Paramorphism present in Manifest? [Y/N] %s", result.isPresentInManifest() ? "Y" : "N");
+
+        int paramorphismPercentage = result.getPercentage();
+
+        StringerResult stringerResult = scanner.getResult().getObfuscatorResult(Obfuscator.STRINGER);
+        scanner.getLogger().log("String encryption entry size: %d", stringerResult.getStringEncryptionResult().size());
     }
 
 }

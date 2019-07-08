@@ -127,13 +127,15 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
                     if (OpcodeUtils.getInstance().findOpcodes(stringerDecrypterStringEncryptionV9_15, instructionList))
                         incrementFlagsReached();
 
-                    if (instructionList.size() == 600)
+                    if (instructionList.size() > 600)
                         incrementFlagsReached();
                 });
 
                 if (raccoon.isDebugging() && getFlagsReached() != 0)
                     log("%s.class for V9_15 with certainty level: %d (%s)", classPath, getFlagsReached(), getFlagsReached() == 1 ? "Unsure" : getFlagsReached() == 2 ? "Undecisive" : "Confident");
 
+                if (getFlagsReached() > 2)
+                    res.add(classNode);
 
                 this.reset();
             }
