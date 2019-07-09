@@ -29,7 +29,7 @@ public class Raccoon {
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     private File targetFile;
     private Map<String, ClassNode> classes;
-    private boolean debugging = true;
+    private boolean debugging = false;
     private Scanners scanners;
     private boolean debugInfoFound = false;
     private Result result;
@@ -122,6 +122,10 @@ public class Raccoon {
 
     public boolean isDebugging() {
         return debugging;
+    }
+
+    public void setDebugging(boolean val) {
+        this.debugging = val;
     }
 
     public boolean isDebugInfoFound() {

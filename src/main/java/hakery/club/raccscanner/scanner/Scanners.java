@@ -5,6 +5,7 @@ import hakery.club.raccscanner.scanner.impl.classes.ClassCountScanner;
 import hakery.club.raccscanner.scanner.impl.classes.DebugInfoScanner;
 import hakery.club.raccscanner.scanner.impl.jar.JarSizeScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.allatori.AllatoriStringEncryptionScanner;
+import hakery.club.raccscanner.scanner.impl.obfuscators.dasho.DashOStringEncryptionScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismClassloaderScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismDecrypterScanner;
 import hakery.club.raccscanner.scanner.impl.obfuscators.paramorphism.ParamorphismManifestScanner;
@@ -47,7 +48,9 @@ public class Scanners {
                 StringerStringEncryptionScanner.class,
                 StringerHideAccessScanner.class,
                 StringerIntegrityControlScanner.class,
-                StringerManifestScanner.class
+                StringerManifestScanner.class,
+
+                DashOStringEncryptionScanner.class
         ));
     }
 

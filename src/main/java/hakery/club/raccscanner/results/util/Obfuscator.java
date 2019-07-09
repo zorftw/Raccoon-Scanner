@@ -4,5 +4,6 @@ public enum Obfuscator {
     PARAMORPHISM,
     ALLATORI,
     STRINGER,
+    DASHO,
     OTHER
 }

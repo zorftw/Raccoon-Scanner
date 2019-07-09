@@ -117,8 +117,8 @@ public class StringerStringEncryptionScanner extends Scanner<ArrayList<ClassNode
             /** Save performance if V3 was already detected */
             if (!(flags.get() > 1)) {
                 if (classNode.fields.size() == 2) {
-                    if (classNode.fields.stream().anyMatch(fieldNode -> fieldNode.desc.equals("[Ljava/lang/Object;"))) ;
-                    incrementFlagsReached();
+                    if (classNode.fields.stream().anyMatch(fieldNode -> fieldNode.desc.equals("[Ljava/lang/Object;")))
+                        incrementFlagsReached();
                 }
 
                 classNode.methods.forEach(methodNode -> {

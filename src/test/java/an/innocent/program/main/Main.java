@@ -17,8 +17,9 @@ public class Main {
          *  3. Scan!
          */
         Raccoon scanner = new Raccoon(new File("input.jar"));
+        scanner.setDebugging(true); /* you can enable debugging */
         scanner.initialize(null); /* set output to System.out */
-        scanner.scan();
+        scanner.scan(); /* if ur debugging this won't be necessary, as the scan will be done automatically instead */
 
         /**
          * Percentages can be easily written for you

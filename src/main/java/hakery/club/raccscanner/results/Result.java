@@ -4,6 +4,7 @@ import hakery.club.raccscanner.Raccoon;
 import hakery.club.raccscanner.results.util.Obfuscator;
 import hakery.club.raccscanner.results.util.result.ObfuscatorResult;
 import hakery.club.raccscanner.results.util.result.impl.AllatoriResult;
+import hakery.club.raccscanner.results.util.result.impl.DashOResult;
 import hakery.club.raccscanner.results.util.result.impl.ParamorphismResult;
 import hakery.club.raccscanner.results.util.result.impl.StringerResult;
 
@@ -22,6 +23,7 @@ public class Result {
         this.results.add(new ParamorphismResult(this.parent));
         this.results.add(new StringerResult(this.parent));
         this.results.add(new AllatoriResult(this.parent));
+        this.results.add(new DashOResult(this.parent));
 
         /**
          * Don't forget to parse

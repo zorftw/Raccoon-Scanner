@@ -54,6 +54,10 @@ public class OpcodeUtils {
                 continue;
 
             int fromOP = from.get(idx);
+
+            if (idx + sourceOffset >= source.size())
+                continue;
+
             int sourceOP = source.get(idx + sourceOffset);
 
             if (sourceOP != fromOP)
